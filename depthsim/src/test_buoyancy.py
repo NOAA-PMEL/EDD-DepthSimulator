@@ -47,14 +47,14 @@ def test_calculate_buoyancy_should_fail_for_invalid_density():
 def test_class_buoyancy_should_report_correct_buoyancy():
     b = Buoyancy()
 
-    expected_buoyancy = 10.052
+    expected_buoyancy = 10052
     buoyancy = b.calculate_buoyancy(1.0, 1025)
 
-    assert np.isclose(expected_buoyancy, buoyancy, rtol=1e-03, atol=1e-05, equal_nan=False)
+    assert np.isclose(expected_buoyancy, buoyancy, rtol=1e-1, atol=1e-2, equal_nan=False)
 
 def test_class_buoyancy_should_return_buoyancy_for_property():
     b = Buoyancy()
 
-    expected_buoyancy = 10.052
+    expected_buoyancy = 10052
 
     assert np.isclose(expected_buoyancy, b.buoyancy, rtol=1e-03, atol=1e-05, equal_nan=False)

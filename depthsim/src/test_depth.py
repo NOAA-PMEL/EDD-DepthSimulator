@@ -1,7 +1,8 @@
 import pytest
 import numpy as np
 
-from depth import Depth
+# from depth import Depth
+from profiler import Depth
 
 def test_depth_class_should_initialize_to_depth_zero():
     d = Depth()

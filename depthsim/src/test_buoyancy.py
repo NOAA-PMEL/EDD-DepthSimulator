@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from buoyancy import Buoyancy
-
+# from buoyancy import Buoyancy
+from profiler import Buoyancy
 
 
 def test_class_buoyancy_should_initialize_with_given_parameters():

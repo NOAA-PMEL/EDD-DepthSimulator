@@ -1,7 +1,6 @@
 import pytest
 import numpy as np
 
-# from buoyancy import Buoyancy
 from profiler import Buoyancy
 
 

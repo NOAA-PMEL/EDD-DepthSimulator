@@ -145,3 +145,120 @@ class Buoyancy:
         if not isinstance(density, (int, float)):
             raise ValueError("Density must be a number")
         return (density * volume * g) / 1000
+
+
+SHAPE_DRAG_COEF = {
+    'sphere': 0.47,
+    'hemisphere': 0.42,
+    'cone':0.50,
+    'cube':1.05,
+    'angled_cube':0.80,
+    'long_cylinder':0.82,
+    'short_cylinder':1.15,
+    'streamlined_body':0.04,
+    'streamlined_half':0.09
+}
+class Drag:
+    def __init__(self, density=1025, velocity=0.0, **kwargs):
+
+        self.velocity = velocity
+        self.density = density
+
+        if 'shape' not in kwargs.keys():
+            raise KeyError('Missing Shape of Profiler')
+
+        if kwargs['shape'].lower() in SHAPE_DRAG_COEF:
+            self._shape = kwargs['shape'].lower()
+        else:
+            raise ValueError(f"Invalid shape: {kwargs['shape']}")
+
+        if ( (self._shape == 'sphere') or
+            (self._shape == 'hemisphere') or
+            (self._shape == 'cone') or 
+            (self._shape == 'long_cylinder') or 
+            (self._shape == 'short_cylinder')):
+
+            if 'diameter' not in kwargs.keys():
+                raise KeyError('Diameter required')
+            if not isinstance(kwargs['diameter'], (int, float)):
+                raise ValueError('Diameter must be a number')
+
+            self._area = np.pi * ((kwargs['diameter']/2)**2)
+
+        elif ( (self._shape == 'cube') ):
+            if 'length' not in kwargs.keys():
+                raise KeyError('Length required')
+            if not isinstance(kwargs['length'], (int, float)):
+                raise ValueError('Length must be a number')
+            self._area = kwargs['length']**2
+        else:
+            raise TypeError('What is it?')
+
+        self._drag_coefficient = SHAPE_DRAG_COEF[self._shape]
+
+        self.drag
+
+    @property
+    def area(self):
+        return self._area
+
+    @property
+    def drag_coefficient(self):
+        return self._drag_coefficient
+
+    @property
+    def density(self):
+        return self._density
+
+    @property
+    def velocity(self):
+        return self._velocity
+
+    @velocity.setter
+    def velocity(self, value):
+        if not isinstance(value, (int, float)):
+            raise ValueError('Velocity must be a number')
+        self._velocity = value
+
+    @density.setter
+    def density(self, value):
+        if not isinstance(value, (int, float)):
+            raise ValueError('Density must be a number')
+        self._density = value
+
+    @property
+    def drag(self):
+        return self.calculate_drag(
+            self.drag_coefficient,
+            self.density,
+            self.area,
+            self.velocity
+        )
+
+        return self._drag
+    
+    @staticmethod
+    def calculate_drag(drag_coef, density, area, velocity):
+        ''' 
+        Calculate the drag force (N) of an object
+
+        Fd = 1/2 * r * u^2 * Cd * A
+
+        where:
+
+        Fd: Drag force (N)
+        r(rho): mass density of the fluid (kg/m^3)
+        u: flow velocity relative to object (m/s)
+        A: reference area (m^2)
+        Cd: Drag coefficient (dimensionless)
+
+        Args:
+            drag_coef: Drag coefficent (Cd)
+            density: Mass density (rho)
+            area: Reference area (A)
+            velocity: Flow velocity (u)
+        
+        Returns:
+            Drag force: Fd
+        '''
+        return (density * (velocity**2) * drag_coef * area) / 2
